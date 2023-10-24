@@ -27,8 +27,9 @@ class Play extends Phaser.Scene {
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
         this.input.on('pointermove', function (pointer) {
-            this.p1Rocket.x = pointer.x;
-            ///this.p1Rocket.y = pointer.y;
+            if (!this.gameOver && !this.p1Rocket.isFiring) {  // Add check for 'isFiring' state
+                this.p1Rocket.x = Phaser.Math.Clamp(pointer.x, borderUISize + borderPadding, game.config.width - borderUISize - borderPadding);
+            }
         }, this);
 
 
