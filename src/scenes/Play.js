@@ -28,10 +28,10 @@ class Play extends Phaser.Scene {
 
         this.input.on('pointermove', function (pointer) {
             this.p1Rocket.x = pointer.x;
-            this.p1Rocket.y = pointer.y;
+            ///this.p1Rocket.y = pointer.y;
         }, this);
 
-        
+
 
         // add spaceships (x3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
