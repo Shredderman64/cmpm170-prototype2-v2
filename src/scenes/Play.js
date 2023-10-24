@@ -32,6 +32,12 @@ class Play extends Phaser.Scene {
             }
         }, this);
 
+        this.input.on('pointerdown', function (pointer) {
+            if (!this.gameOver && !this.p1Rocket.isFiring) {
+                this.p1Rocket.fire();
+            }
+        }, this);
+
 
 
         // add spaceships (x3)
