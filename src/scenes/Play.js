@@ -30,7 +30,7 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         this.timeDisplay = this.add.text(game.config.width/2, borderUISize + borderPadding, this.timeLeftFormatted, timeConfig).setOrigin(0.5, 0);
-
+        
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
         // place tile sprite
