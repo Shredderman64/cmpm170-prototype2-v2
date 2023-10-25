@@ -14,6 +14,23 @@ class Play extends Phaser.Scene {
       }
 
     create() {
+        this.timer = game.settings.gameTimer/1000;
+        
+        //text for display
+        let timeConfig = {
+            fontFamily: 'Arial',
+            fontSize: '28px',
+            backgroundColor: '#000000',
+            color: '#FFFFFF',
+            align: 'center',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        this.timeDisplay = this.add.text(game.config.width/2, borderUISize + borderPadding, this.timeLeftFormatted, timeConfig).setOrigin(0.5, 0);
+
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
         // place tile sprite
@@ -27,7 +44,7 @@ class Play extends Phaser.Scene {
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
         this.input.on('pointermove', function (pointer) {
-            if (!this.gameOver && !this.p1Rocket.isFiring) {  // Add check for 'isFiring' state
+            if (!this.gameOver && !this.p1Rocket.isFiring) {  
                 this.p1Rocket.x = Phaser.Math.Clamp(pointer.x, borderUISize + borderPadding, game.config.width - borderUISize - borderPadding);
             }
         }, this);
