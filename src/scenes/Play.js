@@ -101,12 +101,11 @@ class Play extends Phaser.Scene {
         }, null, this);
     }
     update() {
-        update() 
-            if (!this.gameOver) {
-                let elapsed = this.clock.getElapsedSeconds();
-                let remaining = this.timer - Math.floor(elapsed);
-                this.timeDisplay.text = `${remaining}`;
-            }
+        if (!this.gameOver) {
+            let elapsed = this.clock.getElapsedSeconds();
+            let remaining = this.timer - Math.floor(elapsed);
+            this.timeDisplay.text = `${remaining}`;
+        }
 
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
