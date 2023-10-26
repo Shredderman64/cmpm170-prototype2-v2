@@ -9,28 +9,12 @@ class Play extends Phaser.Scene {
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
         this.load.image('Bulletship', './assets/Bulletship.png');
+        this.load.image('particle', './assets/particle.png');
         // load spritesheet
-        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        //this.load.spritesheet('particle', './assets/particle.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
       }
 
     create() {
-        this.timer = game.settings.gameTimer/1000;
-        
-        //text for display
-        let timeConfig = {
-            fontFamily: 'Arial',
-            fontSize: '28px',
-            backgroundColor: '#000000',
-            color: '#FFFFFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 100
-        }
-        this.timeDisplay = this.add.text(game.config.width/2, borderUISize + borderPadding, this.timeLeftFormatted, timeConfig).setOrigin(0.5, 0);
-
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
         // place tile sprite
@@ -44,7 +28,7 @@ class Play extends Phaser.Scene {
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
         this.input.on('pointermove', function (pointer) {
-            if (!this.gameOver && !this.p1Rocket.isFiring) {  
+            if (!this.gameOver) {
                 this.p1Rocket.x = Phaser.Math.Clamp(pointer.x, borderUISize + borderPadding, game.config.width - borderUISize - borderPadding);
             }
         }, this);
@@ -60,7 +44,7 @@ class Play extends Phaser.Scene {
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
 
-        this.enemyShip = new EnemySpaceship(this, game.config.width, borderUISize*8 + borderPadding*4, 'enemySpaceship', 0, 50).setOrigin(0,0);
+        this.enemyShip = new EnemySpaceship(this, game.config.width, borderUISize*8 + borderPadding*4, 'Bulletship', 0, 50).setOrigin(0,0);
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -69,7 +53,7 @@ class Play extends Phaser.Scene {
         // animation config
         this.anims.create({
             key: 'explode',
-            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
+            frames: this.anims.generateFrameNumbers('particle', { start: 0, end: 9, first: 0}),
             frameRate: 30
         });
         // initialize score
@@ -88,6 +72,20 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+
+        let fireConfig = {
+            fontFamily: 'Courier', 
+            fontSize: '28px', 
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'left',
+            padding: {
+                top: 5, 
+                bottom: 5,
+            },
+            fixedWidth: 100
+           };
+            this.fireText = this.add.text(game.config.width/2, game.config.height/5 - borderUISize - borderPadding, 'FIRE', fireConfig).setVisible(false);
         
         // GAME OVER flag
         this.gameOver = false;
@@ -101,12 +99,6 @@ class Play extends Phaser.Scene {
         }, null, this);
     }
     update() {
-        if (!this.gameOver) {
-            let elapsed = this.clock.getElapsedSeconds();
-            let remaining = this.timer - Math.floor(elapsed);
-            this.timeDisplay.text = `${remaining}`;
-        }
-
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -121,7 +113,16 @@ class Play extends Phaser.Scene {
             this.ship02.update();
             this.ship03.update();
             this.enemyShip.update();
+            if(this.p1Rocket.isFiring == true){
+                this.fireText.setVisible(true);
+                
+            }
+            else{
+                this.fireText.setVisible(false);
+            }
+
         }
+
         // check collisions
         if (this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
@@ -153,16 +154,24 @@ class Play extends Phaser.Scene {
         }
     }
     shipExplode(ship) {
-        // temporarily hide ship
-        ship.alpha = 0;
-        // create explosion sprite at ship's position
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
-        boom.anims.play('explode');             // play explode animation
-        boom.on('animationcomplete', () => {    // callback after anim completes
-          ship.reset();                         // reset ship position
-          ship.alpha = 1;                       // make ship visible again
-          boom.destroy();                       // remove explosion sprite
-        });    
+        const emitter = this.add.particles(400, 250, 'particle', {
+            lifespan: 4000,
+            speed: { min: 180, max: 220 },
+            scale: { start: 0.1, end: 0 },
+            gravityX: ship.x,
+            gravityY: ship.y,
+            blendMode: 'ADD',
+            emitting: false
+        });
+
+        //hide ship 
+        ship.alpha = 0; 
+        //create explosion
+        emitter.explode(16);
+        
+        ship.reset(); //reset position of ship
+        ship.alpha = 1;  //make ship visible
+        
         // score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;     
