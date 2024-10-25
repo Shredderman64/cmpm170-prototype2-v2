@@ -16,13 +16,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        if (this.isDown(this.controls)) {
+        if (this.controls.left.isDown || this.controls.right.isDown) {
             if (this.controls.left.isDown) {
                 this.body.setAccelerationX(-this.ACCELERATION);
             }
             if (this.controls.right.isDown) {
                 this.body.setAccelerationX(this.ACCELERATION);
             }
+        } else {
+            this.body.setAccelerationX(0);
+            this.body.setDragX(this.DRAG);
+        }
+        if (this.controls.up.isDown || this.controls.down.isDown) {
             if (this.controls.up.isDown) {
                 this.body.setAccelerationY(-this.ACCELERATION);
             }
@@ -30,19 +35,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 this.body.setAccelerationY(this.ACCELERATION);
             }
         } else {
-            this.stop();
+            this.body.setAccelerationY(0);
+            this.body.setDragY(this.DRAG);
         }
-    }
-
-    isDown(controls) {
-        for (const key in controls) {
-            if (controls[key].isDown) return true;
-        }
-        return false;
-    }
-    stop() {
-        this.body.setAccelerationX(0);
-        this.body.setAccelerationY(0);
-        this.body.setDrag(this.DRAG);
     }
 }
