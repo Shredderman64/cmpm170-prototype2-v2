@@ -1,5 +1,8 @@
 let config = {
     type: Phaser.CANVAS,
+    physics: {
+        default: "arcade",
+    },
     width: 1000,
     height: 700,
     scene: [Level],
@@ -8,7 +11,6 @@ let config = {
 const game = new Phaser.Game(config);
 
 // reserve keyboard vars
-let keyF, keyR, keyLEFT, keyRIGHT;
 
 // set UI sizes
 let borderUISize = game.config.height / 15;

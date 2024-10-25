@@ -24,6 +24,9 @@ class Level extends Phaser.Scene {
         my.sprite.player = new Player(this, game.config.width / 6, game.config.height / 2,
             "player", null, this.controls);
         my.sprite.player.setScale(0.25);
+        my.sprite.player.setCollideWorldBounds(true);
+        my.sprite.player.body.setMaxVelocityX(500);
+        my.sprite.player.body.setMaxVelocityY(500);
     }
 
     update() {
