@@ -1,4 +1,4 @@
-class Enemy extends Phaser.GameObjects.Scene {
+class Car extends Phaser.GameObjects.Scene {
     constructor(scene, x, y, texture, frame, speed) {
         super(scene, x, y, texture, frame, speed);
 

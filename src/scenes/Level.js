@@ -8,7 +8,17 @@ class Level extends Phaser.Scene {
     preload() {
         this.load.setPath("./assets/");
 
-        this.load.image("player", "player.png");
+        this.load.image("player", "carPlayer.png");
+        this.load.image("carFast", "carFast.png");
+        this.load.image("carSlow", "carSlow.png");
+        this.load.image("carThrow", "carThrow.png");
+        this.load.image("carCutOff", "carCutOff.png");
+        this.load.image("carTruck", "truck.png");
+        this.load.image("mailbox", "mailbox.png");
+        this.load.image("fireHydrant", "fireHydrant.png");
+        this.load.image("cone", "traffic-cone.png");
+        this.load.image("dumpster", "dumpster.png");
+        this.load.image("post", "post.png");
     }
 
     create() {
@@ -27,11 +37,18 @@ class Level extends Phaser.Scene {
         my.sprite.player.setCollideWorldBounds(true);
         my.sprite.player.body.setMaxVelocityX(500);
         my.sprite.player.body.setMaxVelocityY(500);
+        
+        my.sprite.carFast = new Car(this, game.config.width / 5, game.config.height / 3,
+            "carFast", null, 600);
+        my.sprite.carFast.setScale(0.25);
+        my.sprite.carFast.setCollideWorldBounds(true);
     }
 
     update() {
         let my = this.my;
 
         my.sprite.player.update();
+        
+        my.sprite.carFast.update();
     }
 }
