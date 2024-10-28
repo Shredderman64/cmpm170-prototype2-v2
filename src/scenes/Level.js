@@ -73,7 +73,7 @@ class Level extends Phaser.Scene {
 
     spawnCar() {
         let yPos = Phaser.Math.Between(0, game.config.height);
-        return new Car(this, game.config.width + 100, yPos, "carFast", null, 20);
+        return new Car(this, game.config.width + 100, yPos, "carFast", null, 10);
     }
 
     collides(player, object) {

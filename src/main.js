@@ -6,7 +6,7 @@ let config = {
             debug: true,
         }
     },
-    width: 1000,
+    width: 1600,
     height: 700,
     scene: [Title, Level],
 }
