@@ -2,7 +2,8 @@ class Level extends Phaser.Scene {
     constructor() {
         super("levelScreen");
 
-        this.my = {sprite: {}};
+        this.my = { sprite: {} };
+        this.gameOver = false;
     }
 
     preload() {
@@ -19,12 +20,17 @@ class Level extends Phaser.Scene {
         this.load.image("cone", "traffic-cone.png");
         this.load.image("dumpster", "dumpster.png");
         this.load.image("post", "post.png");
+
+        this.load.bitmapFont("pixel_square", "fonts/pixel_square_0.png", "fonts/pixel_square.fnt");
     }
 
     create() {
+        this.init_game();
+        
         let my = this.my;
 
         this.controls = {};
+        this.return = this.input.keyboard.addKey("ENTER");
 
         this.controls.left = this.input.keyboard.addKey("A");
         this.controls.right = this.input.keyboard.addKey("D");
@@ -37,7 +43,7 @@ class Level extends Phaser.Scene {
         my.sprite.player.setCollideWorldBounds(true);
         my.sprite.player.body.setMaxVelocityX(600);
         my.sprite.player.body.setMaxVelocityY(600);
-        
+
         my.sprite.carFast = this.spawnCar();
         my.sprite.carFast.setScale(0.5);
     }
@@ -46,8 +52,23 @@ class Level extends Phaser.Scene {
         let my = this.my;
 
         my.sprite.player.update();
-        
-        my.sprite.carFast.update();
+
+        if (!this.gameOver) {
+            my.sprite.carFast.update();
+            if (this.collides(my.sprite.player, my.sprite.carFast)) {
+                my.sprite.player.makeInactive();
+                this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
+                "game over", 30).setOrigin(0.5);
+                this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
+                "press ENTER to return", 30).setOrigin(0.5);
+                this.gameOver = true;
+            }
+        }
+
+        if (this.gameOver) {
+            if (Phaser.Input.Keyboard.JustDown(this.return))
+                this.scene.start("titleScreen");
+        }
     }
 
     spawnCar() {
@@ -56,10 +77,14 @@ class Level extends Phaser.Scene {
     }
 
     collides(player, object) {
-        if (Math.abs(player.x - object.x) > (player.displayWidth / 2 + object.displayWidth / 2))
+        if (Math.abs(player.x - object.x) > (player.displayWidth / 2 + object.displayWidth / 2) * 0.8)
             return false;
-        if (Math.abs(player.y - object.y) > (player.displayHeight / 2 + object.displayHeight / 2))
+        if (Math.abs(player.y - object.y) > (player.displayHeight / 2 + object.displayHeight / 2) * 0.8)
             return false;
         return true;
+    }
+
+    init_game() {
+        this.gameOver = false;
     }
 }

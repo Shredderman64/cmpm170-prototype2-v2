@@ -22,9 +22,13 @@ class Car extends Phaser.Physics.Arcade.Sprite {
     setPosition() {
         this.x = game.config.width + 100;
         let diceRoll = Math.floor(Phaser.Math.Between(0, 6));
-        if (diceRoll < 5)
+        if (diceRoll < 2)
             this.y = this.scene.my.sprite.player.y;
-        else if (diceRoll >= 5)
+        else if (diceRoll >= 2)
             this.y = Phaser.Math.Between(0, game.config.height);
+    }
+
+    setSpeed(newSpeed) {
+        this.speed = newSpeed;
     }
 }
