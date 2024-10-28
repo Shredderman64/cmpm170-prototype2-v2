@@ -5,7 +5,7 @@ let config = {
     },
     width: 1000,
     height: 700,
-    scene: [Level],
+    scene: [Title, Level],
 }
 
 const game = new Phaser.Game(config);
