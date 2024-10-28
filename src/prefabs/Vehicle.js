@@ -3,6 +3,8 @@ class Car extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, texture, frame);
 
         this.speed = speed;
+        this.x = x;
+        this.y = y;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -11,7 +13,18 @@ class Car extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        // basic enemy functionality - walk back and forth
-        this.x += this.speed;
+        this.x -= this.speed;
+        if (this.x < -this.displayWidth) {
+            this.setPosition();
+        }
+    }
+
+    setPosition() {
+        this.x = game.config.width + 100;
+        let diceRoll = Math.floor(Phaser.Math.Between(0, 6));
+        if (diceRoll < 5)
+            this.y = this.scene.my.sprite.player.y;
+        else if (diceRoll >= 5)
+            this.y = Phaser.Math.Between(0, game.config.height);
     }
 }

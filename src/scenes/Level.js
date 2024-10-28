@@ -33,15 +33,13 @@ class Level extends Phaser.Scene {
 
         my.sprite.player = new Player(this, game.config.width / 6, game.config.height / 2,
             "player", null, this.controls);
-        my.sprite.player.setScale(0.25);
+        my.sprite.player.setScale(0.5);
         my.sprite.player.setCollideWorldBounds(true);
-        my.sprite.player.body.setMaxVelocityX(500);
-        my.sprite.player.body.setMaxVelocityY(500);
+        my.sprite.player.body.setMaxVelocityX(600);
+        my.sprite.player.body.setMaxVelocityY(600);
         
-        my.sprite.carFast = new Car(this, game.config.width / 5, game.config.height / 3,
-            "carFast", null, 600);
-        my.sprite.carFast.setScale(0.25);
-        my.sprite.carFast.setCollideWorldBounds(true);
+        my.sprite.carFast = this.spawnCar();
+        my.sprite.carFast.setScale(0.5);
     }
 
     update() {
@@ -50,5 +48,18 @@ class Level extends Phaser.Scene {
         my.sprite.player.update();
         
         my.sprite.carFast.update();
+    }
+
+    spawnCar() {
+        let yPos = Phaser.Math.Between(0, game.config.height);
+        return new Car(this, game.config.width + 100, yPos, "carFast", null, 20);
+    }
+
+    collides(player, object) {
+        if (Math.abs(player.x - object.x) > (player.displayWidth / 2 + object.displayWidth / 2))
+            return false;
+        if (Math.abs(player.y - object.y) > (player.displayHeight / 2 + object.displayHeight / 2))
+            return false;
+        return true;
     }
 }
