@@ -8,7 +8,7 @@ class Car extends Phaser.Physics.Arcade.Sprite {
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
-
+        
         return this;
     }
 
@@ -28,26 +28,24 @@ class Car extends Phaser.Physics.Arcade.Sprite {
             this.y = Phaser.Math.Between(0, game.config.height);
     }
 
-    setSpeed(newSpeed) {
-        this.speed = newSpeed;
+    // Jump to the player's height
+    jumpToPlayerHeight(player) {
+        this.y = player.y;
     }
 
-    // Implement a function which makes the car jump up to the same height as the player
-    
-    // Test the following function below
-    // // makes the car jump up to the same height as the player
-    // jumpToPlayerHeight(player) {
-    //     this.setY(player.y);
-    // }
-
-    // function to increase the speed of the car that's approaching the player
+    // Sudden speed boost
     boostSpeed(amount, duration) {
-        const originalSpeed = this.speed;  
-        this.setSpeed(this.speed + amount); 
-    
+        const originalSpeed = this.speed;  // Save the original speed
+        this.setSpeed(this.speed + amount); // Increase the speed by the specified amount
+
         // Reset speed after the duration using a delayed timer
         this.scene.time.delayedCall(duration, () => {
             this.setSpeed(originalSpeed);  // Reset to original speed
         });
+    }
+
+    // Helper function to set speed (optional, can also just modify this.speed directly)
+    setSpeed(newSpeed) {
+        this.speed = newSpeed;
     }
 }
