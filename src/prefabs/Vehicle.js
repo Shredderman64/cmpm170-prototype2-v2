@@ -31,4 +31,23 @@ class Car extends Phaser.Physics.Arcade.Sprite {
     setSpeed(newSpeed) {
         this.speed = newSpeed;
     }
+
+    // Implement a function which makes the car jump up to the same height as the player
+    
+    // Test the following function below
+    // // makes the car jump up to the same height as the player
+    // jumpToPlayerHeight(player) {
+    //     this.setY(player.y);
+    // }
+
+    // function to increase the speed of the car that's approaching the player
+    boostSpeed(amount, duration) {
+        const originalSpeed = this.speed;  
+        this.setSpeed(this.speed + amount); 
+    
+        // Reset speed after the duration using a delayed timer
+        this.scene.time.delayedCall(duration, () => {
+            this.setSpeed(originalSpeed);  // Reset to original speed
+        });
+    }
 }
