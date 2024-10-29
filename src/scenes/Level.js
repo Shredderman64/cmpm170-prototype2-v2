@@ -9,24 +9,6 @@ class Level extends Phaser.Scene {
         this.periodicTimer = 0;
     }
 
-    preload() {
-        this.load.setPath("./assets/");
-
-        this.load.image("player", "carPlayer.png");
-        this.load.image("carFast", "carFast.png");
-        this.load.image("carSlow", "carSlow.png");
-        this.load.image("carThrow", "carThrow.png");
-        this.load.image("carCutOff", "carCutOff.png");
-        this.load.image("carTruck", "truck.png");
-        this.load.image("mailbox", "mailbox.png");
-        this.load.image("fireHydrant", "fireHydrant.png");
-        this.load.image("cone", "traffic-cone.png");
-        this.load.image("dumpster", "dumpster.png");
-        this.load.image("post", "post.png");
-
-        this.load.bitmapFont("pixel_square", "fonts/pixel_square_0.png", "fonts/pixel_square.fnt");
-    }
-
     create() {
         this.init_game();
         
@@ -49,6 +31,9 @@ class Level extends Phaser.Scene {
 
         my.sprite.carFast = this.spawnCar();
         my.sprite.carFast.setScale(0.5);
+
+        my.sprite.throwable = this.physics.add.sprite(x, y, "throw", 8);
+        my.sprite.throwable.setScale(0.5);
     }
 
     update() {
@@ -72,6 +57,15 @@ class Level extends Phaser.Scene {
                 }
             }
 
+            if (this.collides(my.sprite.player, my.sprite.throwable)) {
+                my.sprite.player.makeInactive();
+                this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
+                "game over", 30).setOrigin(0.5);
+                this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
+                "press ENTER to return", 30).setOrigin(0.5);
+                this.gameOver = true;
+            }
+
             if (this.collides(my.sprite.player, my.sprite.carFast)) {
                 my.sprite.player.makeInactive();
                 this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
@@ -92,6 +86,7 @@ class Level extends Phaser.Scene {
         let yPos = Phaser.Math.Between(0, game.config.height);
         return new Car(this, game.config.width + 100, yPos, "carFast", null, 10);
     }
+
 
     collides(player, object) {
         if (Math.abs(player.x - object.x) > (player.displayWidth / 2 + object.displayWidth / 2) * 0.8)
