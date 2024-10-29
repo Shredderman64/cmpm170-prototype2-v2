@@ -21,29 +21,13 @@ class Load extends Phaser.Scene {
         this.load.bitmapFont("pixel_square", "fonts/pixel_square_0.png", "fonts/pixel_square.fnt");
 
         // preload background
-        this.load.image("menu_background", "lilguy_background.png");
-
-        // preload particle sheet
-        this.load.multiatlas("kenny-particles", "kenny-particles.json");
-        
-        // preload audio
-        this.load.audio("spawnReset", "audio/powerUp1.ogg");
-        this.load.audio("coinPickup", "audio/powerUp2.ogg");
-        this.load.audio("keyPickup", "audio/powerUp5.ogg");
-
-        this.load.audio("playerHurt", "audio/explosionCrunch_000.ogg");
-        this.load.audio("playerDeath", "audio/explosionCrunch_004.ogg");
-
-        this.load.audio("bounce", "audio/phaseJump1.ogg");
-        this.load.audio("squash", "audio/impactPlate_light_000.ogg");
-        this.load.audio("pew", "audio/laserSmall_000.ogg");
-
-        // preload font
-        this.load.bitmapFont("retro", "fonts/retro_0.png", "fonts/retro.fnt");
+        //this.load.image("menu_background", "lilguy_background.png");
+                
     }
 
     create() {
         // create animations
+        /*
         this.anims.create({
             key: "walk",
             defaultTextureKey: "tilemap_characters",
@@ -73,7 +57,7 @@ class Load extends Phaser.Scene {
             repeat: -1
         })
 
-
+        */
         this.scene.start("titleScreen");
     }
 }

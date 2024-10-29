@@ -32,8 +32,8 @@ class Level extends Phaser.Scene {
         my.sprite.carFast = this.spawnCar();
         my.sprite.carFast.setScale(0.5);
 
-        my.sprite.throwable = this.physics.add.sprite(x, y, "throw", 8);
-        my.sprite.throwable.setScale(0.5);
+        //my.sprite.throwable = this.physics.add.sprite(x, y, "throw", 8);
+        //my.sprite.throwable.setScale(0.5);
     }
 
     update() {
@@ -57,6 +57,7 @@ class Level extends Phaser.Scene {
                 }
             }
 
+            /*
             if (this.collides(my.sprite.player, my.sprite.throwable)) {
                 my.sprite.player.makeInactive();
                 this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
@@ -65,6 +66,7 @@ class Level extends Phaser.Scene {
                 "press ENTER to return", 30).setOrigin(0.5);
                 this.gameOver = true;
             }
+            */
 
             if (this.collides(my.sprite.player, my.sprite.carFast)) {
                 my.sprite.player.makeInactive();
