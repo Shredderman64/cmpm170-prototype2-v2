@@ -17,6 +17,7 @@ class Load extends Phaser.Scene {
         this.load.image("cone", "traffic-cone.png");
         this.load.image("dumpster", "dumpster.png");
         this.load.image("post", "post.png");
+        this.load.image("racetrack", "racetrack.png");
 
         this.load.bitmapFont("pixel_square", "fonts/pixel_square_0.png", "fonts/pixel_square.fnt");
 
