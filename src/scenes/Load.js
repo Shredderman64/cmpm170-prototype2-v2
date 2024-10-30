@@ -29,7 +29,6 @@ class Load extends Phaser.Scene {
 
         // preload background
         //this.load.image("menu_background", "lilguy_background.png");
-                
     }
 
     create() {

@@ -12,6 +12,13 @@ class Level extends Phaser.Scene {
     }
 
     create() {
+
+        // adding racetrack background
+        this.racetrack = this.add.tileSprite(0, 0, 1560, 1260, 'racetrack').setOrigin(0, 0);
+
+        // Scale the racetrack image to fit the game screen
+        this.racetrack.setScale(1, 0.6);
+
         this.init_game();
         
         let my = this.my;
