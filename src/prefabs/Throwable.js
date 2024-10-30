@@ -3,8 +3,11 @@ class Throwable extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, texture, frame);
 
         this.x = x;
-        this.y = y;
         this.throwDistance = Phaser.Math.Between(100, 600);
+        if (throwDirection > 0)
+            this.y = y + this.throwDistance;
+        else
+            this.y = y - this.throwDistance;
         this.throwDirection = throwDirection;
 
         scene.add.existing(this);
@@ -14,11 +17,6 @@ class Throwable extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        if (throwDirection > 0) {
-            this.y--;
-        }
-        else if (throwDirection < 0) {
-            this.y++;
-        }
+        this.x -= 15;
     }
 }
