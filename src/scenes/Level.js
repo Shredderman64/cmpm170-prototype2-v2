@@ -53,8 +53,8 @@ class Level extends Phaser.Scene {
             if (this.periodicTimer >= 120) {
                 this.periodicTimer = 0; // Reset the timer
 
-                // Randomly choose between jump and speed boost
-                if (Phaser.Math.Between(0, 1) === 0) {
+                // Randomly choose between jump and speed boost with a delay for jump
+                if (Phaser.Math.Between(0, 1) === 0 && this.periodicTimer > 240) {  // Add a condition
                     my.sprite.carFast.jumpToPlayerHeight(my.sprite.player);
                 } else {
                     my.sprite.carFast.boostSpeed(5, 2000); // Boost speed by 5 for 2 seconds
