@@ -37,6 +37,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.body.setAccelerationY(0);
             this.body.setDragY(this.DRAG);
         }
+
+        if (this.scene.periodicTimer == 90)
+            this.anims.play("warning");
+        else if (this.scene.periodicTimer == 0)
+            this.anims.play("idle");
     }
 
     makeInactive() {

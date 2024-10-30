@@ -6,6 +6,11 @@ class Load extends Phaser.Scene {
     preload() {
         this.load.setPath("./assets/");
 
+        this.load.spritesheet("car_sheet", "carSprites.png", {
+            frameWidth: 400,
+            frameHeight: 400
+        });
+
         this.load.image("player", "carPlayer.png");
         this.load.image("carFast", "carFast.png");
         this.load.image("carSlow", "carSlow.png");
@@ -28,6 +33,27 @@ class Load extends Phaser.Scene {
 
     create() {
         // create animations
+
+        this.anims.create({
+            key: "warning",
+            defaultTextureKey: "car_sheet",
+            frameRate: 20,
+            frames: [
+                { frame: 0 },
+                { frame: 1 }
+            ],
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: "idle",
+            defaultTextureKey: "car_sheet",
+            frames: [
+                { frame: 0 }
+            ],
+            repeat: -1
+        });
+        
         /*
         this.anims.create({
             key: "walk",

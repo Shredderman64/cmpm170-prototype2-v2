@@ -100,5 +100,6 @@ class Level extends Phaser.Scene {
 
     init_game() {
         this.gameOver = false;
+        this.periodicTimer = 0;
     }
 }
