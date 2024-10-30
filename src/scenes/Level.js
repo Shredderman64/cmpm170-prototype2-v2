@@ -45,6 +45,15 @@ class Level extends Phaser.Scene {
 
         my.sprite.player.update();
 
+        function displayGameOver(scene) {
+            my.sprite.player.makeInactive();
+            scene.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
+                "game over", 30).setOrigin(0.5);
+            scene.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
+                "press ENTER to return", 30).setOrigin(0.5);
+            scene.gameOver = true;
+        }
+
         if (!this.gameOver) {
             my.sprite.carFast.update();
             for (const trash of this.litter) {
@@ -60,7 +69,7 @@ class Level extends Phaser.Scene {
                 let diceRoll = Math.floor(Phaser.Math.Between(0, 2));
                 // Randomly choose between jump and speed boost
                 //this.litter.push(this.spawnThrowable());
-                if (diceRoll == 0) {
+                if (diceRoll == 0/* && this.periodicTimer > 240*/) {
                     my.sprite.carFast.jumpToPlayerHeight(my.sprite.player);
                 } else if (diceRoll == 1) {
                     my.sprite.carFast.boostSpeed(5, 2000); // Boost speed by 5 for 2 seconds
@@ -70,25 +79,17 @@ class Level extends Phaser.Scene {
             }
 
             if (this.collides(my.sprite.player, my.sprite.carFast)) {
-                my.sprite.player.makeInactive();
-                this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
-                "game over", 30).setOrigin(0.5);
-                this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
-                "press ENTER to return", 30).setOrigin(0.5);
-                this.gameOver = true;
+                displayGameOver(this);
             }
 
-            /*
-            if (this.collides(my.sprite.player, my.sprite.throwable)) {
-                my.sprite.player.makeInactive();
-                //my.sprite.throwable.destroy();
-                this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
-                "game over", 30).setOrigin(0.5);
-                this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
-                "press ENTER to return", 30).setOrigin(0.5);
-                this.gameOver = true;
+            for (const trash of this.litter) {
+                if (this.collides(my.sprite.player, trash)) {
+                    displayGameOver(this);
+                }
+                if (trash.x < 0) {
+                    this.litter.splice(this.litter.indexOf(trash), 1);
+                }
             }
-            */
         }
 
         if (this.gameOver) {
@@ -126,5 +127,6 @@ class Level extends Phaser.Scene {
     init_game() {
         this.gameOver = false;
         this.periodicTimer = 0;
+        this.litter = [];
     }
 }
