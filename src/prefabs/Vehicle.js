@@ -21,11 +21,14 @@ class Car extends Phaser.Physics.Arcade.Sprite {
 
     setPosition() {
         this.x = game.config.width + 100;
-        let diceRoll = Math.floor(Phaser.Math.Between(0, 6));
-        if (diceRoll < 2)
-            this.y = this.scene.my.sprite.player.y;
-        else if (diceRoll >= 2)
+        let playerY = this.scene.my.sprite.player.y;
+        let minY = playerY - 100;  // Define a range to avoid around the player
+        let maxY = playerY + 100;
+
+        // Set y to a position outside the player's vertical range
+        do {
             this.y = Phaser.Math.Between(0, game.config.height);
+        } while (this.y > minY && this.y < maxY);  // Ensure it's outside the range
     }
 
     // Jump to the player's height
