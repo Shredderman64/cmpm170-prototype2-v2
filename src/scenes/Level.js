@@ -32,8 +32,11 @@ class Level extends Phaser.Scene {
         my.sprite.carFast = this.spawnCar();
         my.sprite.carFast.setScale(0.5);
 
-        //my.sprite.throwable = this.physics.add.sprite(x, y, "throw", 8);
-        //my.sprite.throwable.setScale(0.5);
+        my.sprite.carThrow = this.spawnCarThrow();
+        my.sprite.carThrow.setScale(0.5);
+        
+        my.sprite.throwable = this.spawnThrowable();
+        my.sprite.throwable.setScale(0.5);
     }
 
     update() {
@@ -43,6 +46,7 @@ class Level extends Phaser.Scene {
 
         if (!this.gameOver) {
             my.sprite.carFast.update();
+            my.sprite.carThrow.update();
 
             // Periodic trigger every 120 frames (approx. 2 seconds)
             this.periodicTimer++;
@@ -57,8 +61,7 @@ class Level extends Phaser.Scene {
                 }
             }
 
-            /*
-            if (this.collides(my.sprite.player, my.sprite.throwable)) {
+            if (this.collides(my.sprite.player, my.sprite.carFast)) {
                 my.sprite.player.makeInactive();
                 this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
                 "game over", 30).setOrigin(0.5);
@@ -66,10 +69,23 @@ class Level extends Phaser.Scene {
                 "press ENTER to return", 30).setOrigin(0.5);
                 this.gameOver = true;
             }
-            */
 
-            if (this.collides(my.sprite.player, my.sprite.carFast)) {
+            if (this.collides(my.sprite.player, my.sprite.carThrow)) {
                 my.sprite.player.makeInactive();
+                this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
+                "game over", 30).setOrigin(0.5);
+                this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
+                "press ENTER to return", 30).setOrigin(0.5);
+                this.gameOver = true;
+            }
+
+            if(my.sprite.carThrow.shoot) {
+                
+            }
+
+            if (this.collides(my.sprite.player, my.sprite.throwable)) {
+                my.sprite.player.makeInactive();
+                //my.sprite.throwable.destroy();
                 this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
                 "game over", 30).setOrigin(0.5);
                 this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
@@ -87,6 +103,23 @@ class Level extends Phaser.Scene {
     spawnCar() {
         let yPos = Phaser.Math.Between(0, game.config.height);
         return new Car(this, game.config.width + 100, yPos, "carFast", null, 10);
+    }
+
+    spawnCarThrow() {
+        let yPos = Phaser.Math.Between(0, game.config.height);
+        return new CarThrow(this, game.config.width + 100, yPos, "carThrow", null, 10);
+    }
+
+    spawnThrowable() {
+        let my = this.my;
+        let throwDirection = 0;
+        if (my.sprite.player.y > my.sprite.carThrow.y) {
+            throwDirection = 1;
+        }
+        else if (my.sprite.player.y < my.sprite.carThrow.y) {
+            throwDirection = -1;
+        }
+        return new Throwable(this, my.sprite.carThrow.x, my.sprite.carThrow.y, "throw", null, throwDirection);
     }
 
 
