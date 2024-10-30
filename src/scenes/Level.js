@@ -4,6 +4,8 @@ class Level extends Phaser.Scene {
 
         this.my = { sprite: {} };
         this.gameOver = false;
+        this.carSpeed = 10;
+        this.litter = [];
 
         // Timer for periodic trigger
         this.periodicTimer = 0;
@@ -31,6 +33,12 @@ class Level extends Phaser.Scene {
 
         my.sprite.carFast = this.spawnCar();
         my.sprite.carFast.setScale(0.5);
+
+        //my.sprite.carThrow = this.spawnCarThrow();
+        //my.sprite.carThrow.setScale(0.5);
+        
+        //my.sprite.throwable = this.spawnThrowable();
+        //my.sprite.throwable.setScale(0.5);
     }
 
     update() {
@@ -38,29 +46,50 @@ class Level extends Phaser.Scene {
 
         my.sprite.player.update();
 
+        function displayGameOver(scene) {
+            my.sprite.player.makeInactive();
+            scene.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
+                "game over", 30).setOrigin(0.5);
+            scene.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
+                "press ENTER to return", 30).setOrigin(0.5);
+            scene.gameOver = true;
+        }
+
         if (!this.gameOver) {
             my.sprite.carFast.update();
+            for (const trash of this.litter) {
+                trash.update();
+            }
+            //my.sprite.carThrow.update();
 
             // Periodic trigger every 120 frames (approx. 2 seconds)
             this.periodicTimer++;
             if (this.periodicTimer >= 120) {
                 this.periodicTimer = 0; // Reset the timer
 
-                // Randomly choose between jump and speed boost with a delay for jump
-                if (Phaser.Math.Between(0, 1) === 0 && this.periodicTimer > 240) {  // Add a condition
+                let diceRoll = Math.floor(Phaser.Math.Between(0, 2));
+                // Randomly choose between jump and speed boost
+                //this.litter.push(this.spawnThrowable());
+                if (diceRoll == 0/* && this.periodicTimer > 240*/) {
                     my.sprite.carFast.jumpToPlayerHeight(my.sprite.player);
-                } else {
+                } else if (diceRoll == 1) {
                     my.sprite.carFast.boostSpeed(5, 2000); // Boost speed by 5 for 2 seconds
+                } else if (diceRoll == 2) {
+                    this.litter.push(this.spawnThrowable(my.sprite.carFast.speed));
                 }
             }
 
             if (this.collides(my.sprite.player, my.sprite.carFast)) {
-                my.sprite.player.makeInactive();
-                this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
-                "game over", 30).setOrigin(0.5);
-                this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
-                "press ENTER to return", 30).setOrigin(0.5);
-                this.gameOver = true;
+                displayGameOver(this);
+            }
+
+            for (const trash of this.litter) {
+                if (this.collides(my.sprite.player, trash)) {
+                    displayGameOver(this);
+                }
+                if (trash.x < 0) {
+                    this.litter.splice(this.litter.indexOf(trash), 1);
+                }
             }
         }
 
@@ -72,7 +101,20 @@ class Level extends Phaser.Scene {
 
     spawnCar() {
         let yPos = Phaser.Math.Between(0, game.config.height);
-        return new Car(this, game.config.width + 100, yPos, "carFast", null, 10);
+        return new Car(this, game.config.width + 100, yPos, "carFast", null, this.carSpeed);
+    }
+
+    spawnThrowable() {
+        let my = this.my;
+        let throwDirection = 0;
+        if (my.sprite.player.y > my.sprite.carFast.y) {
+            throwDirection = 1;
+        }
+        else if (my.sprite.player.y < my.sprite.carFast.y) {
+            throwDirection = -1;
+        }
+        return new Throwable(this, my.sprite.carFast.x, my.sprite.carFast.y, 
+            "throw", null, throwDirection, this.carSpeed);
     }
 
 
@@ -87,5 +129,6 @@ class Level extends Phaser.Scene {
     init_game() {
         this.gameOver = false;
         this.periodicTimer = 0;
+        this.litter = [];
     }
 }
