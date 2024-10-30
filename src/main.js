@@ -3,10 +3,10 @@ let config = {
     physics: {
         default: "arcade",
         arcade: {
-            debug: true,
+            debug: false,
         }
     },
-    width: 1600,
+    width: 1200,
     height: 700,
     scene: [Load, Title, Level]
 }

@@ -9,7 +9,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         this.ACCELERATION = 2560;
-        this.DRAG = 900;
+        this.DRAG = 750;
 
         return this;
     }
@@ -46,5 +46,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     makeInactive() {
         this.active = false;
+        this.body.setAcceleration(0);
+        this.body.setVelocity(0);
     }
 }

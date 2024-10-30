@@ -4,7 +4,7 @@ class Level extends Phaser.Scene {
 
         this.my = { sprite: {} };
         this.gameOver = false;
-        this.carSpeed = 10;
+        this.carSpeed = 15;
         this.litter = [];
 
         // Timer for periodic trigger
@@ -28,8 +28,8 @@ class Level extends Phaser.Scene {
             "player", null, this.controls);
         my.sprite.player.setScale(0.5);
         my.sprite.player.setCollideWorldBounds(true);
-        my.sprite.player.body.setMaxVelocityX(600);
-        my.sprite.player.body.setMaxVelocityY(600);
+        my.sprite.player.body.setMaxVelocityX(700);
+        my.sprite.player.body.setMaxVelocityY(700);
 
         my.sprite.carFast = this.spawnCar();
         my.sprite.carFast.setScale(0.5);
@@ -121,7 +121,7 @@ class Level extends Phaser.Scene {
     collides(player, object) {
         if (Math.abs(player.x - object.x) > (player.displayWidth / 2 + object.displayWidth / 2) * 0.8)
             return false;
-        if (Math.abs(player.y - object.y) > (player.displayHeight / 2 + object.displayHeight / 2) * 0.8)
+        if (Math.abs(player.y - object.y) > (player.displayHeight / 2 + object.displayHeight / 2) * 0.7)
             return false;
         return true;
     }
