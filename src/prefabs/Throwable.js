@@ -1,5 +1,5 @@
 class Throwable extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, texture, frame, throwDirection) {
+    constructor(scene, x, y, texture, frame, throwDirection, carSpeed) {
         super(scene, x, y, texture, frame);
 
         this.x = x;
@@ -9,6 +9,7 @@ class Throwable extends Phaser.Physics.Arcade.Sprite {
         else
             this.y = y - this.throwDistance;
         this.throwDirection = throwDirection;
+        this.speed = carSpeed + 5;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -17,9 +18,8 @@ class Throwable extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        this.x -= 15;
-        if (this.x < 0) {
+        this.x -= this.speed;
+        if (this.x < 0)
             this.destroy();
-        }
     }
 }

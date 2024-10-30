@@ -4,6 +4,7 @@ class Level extends Phaser.Scene {
 
         this.my = { sprite: {} };
         this.gameOver = false;
+        this.carSpeed = 10;
         this.litter = [];
 
         // Timer for periodic trigger
@@ -74,7 +75,7 @@ class Level extends Phaser.Scene {
                 } else if (diceRoll == 1) {
                     my.sprite.carFast.boostSpeed(5, 2000); // Boost speed by 5 for 2 seconds
                 } else if (diceRoll == 2) {
-                    this.litter.push(this.spawnThrowable());
+                    this.litter.push(this.spawnThrowable(my.sprite.carFast.speed));
                 }
             }
 
@@ -100,7 +101,7 @@ class Level extends Phaser.Scene {
 
     spawnCar() {
         let yPos = Phaser.Math.Between(0, game.config.height);
-        return new Car(this, game.config.width + 100, yPos, "carFast", null, 10);
+        return new Car(this, game.config.width + 100, yPos, "carFast", null, this.carSpeed);
     }
 
     spawnThrowable() {
@@ -112,7 +113,8 @@ class Level extends Phaser.Scene {
         else if (my.sprite.player.y < my.sprite.carFast.y) {
             throwDirection = -1;
         }
-        return new Throwable(this, my.sprite.carFast.x, my.sprite.carFast.y, "throw", null, throwDirection);
+        return new Throwable(this, my.sprite.carFast.x, my.sprite.carFast.y, 
+            "throw", null, throwDirection, this.carSpeed);
     }
 
 
