@@ -4,8 +4,7 @@ class Level extends Phaser.Scene {
 
         this.my = { sprite: {} };
         this.gameOver = false;
-        this.carSpeed = 15;
-        this.litter = [];
+        this.carSpeed = 20;
 
         // Timer for periodic trigger
         this.periodicTimer = 0;
@@ -35,17 +34,11 @@ class Level extends Phaser.Scene {
             "player", null, this.controls);
         my.sprite.player.setScale(0.5);
         my.sprite.player.setCollideWorldBounds(true);
-        my.sprite.player.body.setMaxVelocityX(700);
-        my.sprite.player.body.setMaxVelocityY(700);
+        my.sprite.player.body.setMaxVelocityX(500);
+        my.sprite.player.body.setMaxVelocityY(500);
 
         my.sprite.carFast = this.spawnCar();
         my.sprite.carFast.setScale(0.5);
-
-        //my.sprite.carThrow = this.spawnCarThrow();
-        //my.sprite.carThrow.setScale(0.5);
-        
-        //my.sprite.throwable = this.spawnThrowable();
-        //my.sprite.throwable.setScale(0.5);
     }
 
     update() {
@@ -62,41 +55,33 @@ class Level extends Phaser.Scene {
             scene.gameOver = true;
         }
 
-        if (!this.gameOver) {
+        if (!this.gameOver && my.sprite.carFast.visible) {
             my.sprite.carFast.update();
-            for (const trash of this.litter) {
-                trash.update();
-            }
-            //my.sprite.carThrow.update();
-
             // Periodic trigger every 120 frames (approx. 2 seconds)
             this.periodicTimer++;
             if (this.periodicTimer >= 120) {
                 this.periodicTimer = 0; // Reset the timer
 
-                let diceRoll = Math.floor(Phaser.Math.Between(0, 2));
+                let diceRoll = Math.floor(Phaser.Math.Between(0, 1));
                 // Randomly choose between jump and speed boost
                 //this.litter.push(this.spawnThrowable());
                 if (diceRoll == 0/* && this.periodicTimer > 240*/) {
                     my.sprite.carFast.jumpToPlayerHeight(my.sprite.player);
                 } else if (diceRoll == 1) {
                     my.sprite.carFast.boostSpeed(5, 2000); // Boost speed by 5 for 2 seconds
-                } else if (diceRoll == 2) {
-                    this.litter.push(this.spawnThrowable(my.sprite.carFast.speed));
-                }
+                }// else if (diceRoll == 2) {
+                //    this.litter.push(this.spawnThrowable(my.sprite.carFast.speed));
+                //}
             }
 
             if (this.collides(my.sprite.player, my.sprite.carFast)) {
-                displayGameOver(this);
-            }
-
-            for (const trash of this.litter) {
-                if (this.collides(my.sprite.player, trash)) {
-                    displayGameOver(this);
-                }
-                if (trash.x < 0) {
-                    this.litter.splice(this.litter.indexOf(trash), 1);
-                }
+                my.sprite.carFast.visible = false;
+                my.sprite.carFast.y = -100;
+                setTimeout(() => {
+                    my.sprite.carFast.destroy();
+                    my.sprite.carFast = this.spawnCar();
+                    my.sprite.carFast.setScale(0.5);
+                }, 1000);
             }
         }
 
@@ -111,20 +96,6 @@ class Level extends Phaser.Scene {
         return new Car(this, game.config.width + 100, yPos, "carFast", null, this.carSpeed);
     }
 
-    spawnThrowable() {
-        let my = this.my;
-        let throwDirection = 0;
-        if (my.sprite.player.y > my.sprite.carFast.y) {
-            throwDirection = 1;
-        }
-        else if (my.sprite.player.y < my.sprite.carFast.y) {
-            throwDirection = -1;
-        }
-        return new Throwable(this, my.sprite.carFast.x, my.sprite.carFast.y, 
-            "throw", null, throwDirection, this.carSpeed);
-    }
-
-
     collides(player, object) {
         if (Math.abs(player.x - object.x) > (player.displayWidth / 2 + object.displayWidth / 2) * 0.8)
             return false;
@@ -136,6 +107,5 @@ class Level extends Phaser.Scene {
     init_game() {
         this.gameOver = false;
         this.periodicTimer = 0;
-        this.litter = [];
     }
 }
