@@ -4,7 +4,7 @@ class Level extends Phaser.Scene {
 
         this.my = { sprite: {} };
         this.gameOver = false;
-        this.carSpeed = 20;
+        this.carSpeed = 25;
 
         // Timer for periodic trigger
         this.periodicTimer = 0;
@@ -58,21 +58,21 @@ class Level extends Phaser.Scene {
         if (!this.gameOver && my.sprite.carFast.visible) {
             my.sprite.carFast.update();
             // Periodic trigger every 120 frames (approx. 2 seconds)
-            this.periodicTimer++;
-            if (this.periodicTimer >= 120) {
+            //this.periodicTimer++;
+            /*if (this.periodicTimer >= 120) {
                 this.periodicTimer = 0; // Reset the timer
 
                 let diceRoll = Math.floor(Phaser.Math.Between(0, 1));
                 // Randomly choose between jump and speed boost
                 //this.litter.push(this.spawnThrowable());
-                if (diceRoll == 0/* && this.periodicTimer > 240*/) {
+                if (diceRoll == 0) {
                     my.sprite.carFast.jumpToPlayerHeight(my.sprite.player);
                 } else if (diceRoll == 1) {
                     my.sprite.carFast.boostSpeed(5, 2000); // Boost speed by 5 for 2 seconds
                 }// else if (diceRoll == 2) {
                 //    this.litter.push(this.spawnThrowable(my.sprite.carFast.speed));
                 //}
-            }
+            }*/
 
             if (this.collides(my.sprite.player, my.sprite.carFast)) {
                 my.sprite.carFast.visible = false;
