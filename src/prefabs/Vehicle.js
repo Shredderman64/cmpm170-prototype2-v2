@@ -6,6 +6,7 @@ class Car extends Phaser.Physics.Arcade.Sprite {
         this.x = x;
         this.y = y;
 
+        this.threat = scene.my.sprite.player;
         scene.add.existing(this);
         scene.physics.add.existing(this);
         
@@ -22,6 +23,12 @@ class Car extends Phaser.Physics.Arcade.Sprite {
                 this.setPosition()
             }, 1000);
         }
+        if (this.distanceToPlayer(this.threat) <= 400) {
+            if (this.y <= this.threat.y)
+                this.y -= 5;
+            else
+                this.y += 5;
+        }
     }
 
     setPosition() {
@@ -36,9 +43,8 @@ class Car extends Phaser.Physics.Arcade.Sprite {
         } while (this.y > minY && this.y < maxY);  // Ensure it's outside the range
     }
 
-    // Jump to the player's height
-    jumpToPlayerHeight(player) {
-        this.y = player.y;
+    distanceToPlayer(player) {
+        return Phaser.Math.Distance.Between(player.x, player.y, this.x, this.y);
     }
 
     // Sudden speed boost
