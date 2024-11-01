@@ -13,16 +13,8 @@ class Load extends Phaser.Scene {
 
         this.load.image("player", "carPlayer.png");
         this.load.image("carFast", "carFast.png");
-        this.load.image("carSlow", "carSlow.png");
-        this.load.image("carThrow", "carThrow.png");
-        this.load.image("carCutOff", "carCutOff.png");
-        this.load.image("carTruck", "truck.png");
-        this.load.image("mailbox", "mailbox.png");
-        this.load.image("fireHydrant", "fireHydrant.png");
-        this.load.image("cone", "traffic-cone.png");
-        this.load.image("dumpster", "dumpster.png");
-        this.load.image("post", "post.png");
         this.load.image("throw", "throw.png");
+        this.load.image("ambulance", "carAmbulence.png")
         this.load.image("racetrack", "racetrack.png");
 
         this.load.bitmapFont("pixel_square", "fonts/pixel_square_0.png", "fonts/pixel_square.fnt");

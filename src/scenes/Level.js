@@ -34,8 +34,8 @@ class Level extends Phaser.Scene {
             "player", null, this.controls);
         my.sprite.player.setScale(0.5);
         my.sprite.player.setCollideWorldBounds(true);
-        my.sprite.player.body.setMaxVelocityX(500);
-        my.sprite.player.body.setMaxVelocityY(500);
+        my.sprite.player.body.setMaxVelocityX(700);
+        my.sprite.player.body.setMaxVelocityY(700);
 
         my.sprite.carFast = this.spawnCar();
         my.sprite.carFast.setScale(0.5);
@@ -43,6 +43,7 @@ class Level extends Phaser.Scene {
 
     update() {
         let my = this.my;
+        let car = my.sprite.carFast;
 
         my.sprite.player.update();
 
@@ -56,33 +57,21 @@ class Level extends Phaser.Scene {
         }
 
         if (!this.gameOver && my.sprite.carFast.visible) {
-            my.sprite.carFast.update();
-            // Periodic trigger every 120 frames (approx. 2 seconds)
-            //this.periodicTimer++;
-            /*if (this.periodicTimer >= 120) {
-                this.periodicTimer = 0; // Reset the timer
+            car.update();
 
-                let diceRoll = Math.floor(Phaser.Math.Between(0, 1));
-                // Randomly choose between jump and speed boost
-                //this.litter.push(this.spawnThrowable());
-                if (diceRoll == 0) {
-                    my.sprite.carFast.jumpToPlayerHeight(my.sprite.player);
-                } else if (diceRoll == 1) {
-                    my.sprite.carFast.boostSpeed(5, 2000); // Boost speed by 5 for 2 seconds
-                }// else if (diceRoll == 2) {
-                //    this.litter.push(this.spawnThrowable(my.sprite.carFast.speed));
-                //}
-            }*/
-
-            if (this.collides(my.sprite.player, my.sprite.carFast)) {
-                my.sprite.carFast.visible = false;
-                my.sprite.carFast.y = -100;
-                setTimeout(() => {
-                    my.sprite.carFast.destroy();
-                    my.sprite.carFast = this.spawnCar();
-                    my.sprite.carFast.setScale(0.5);
-                }, 1000);
+            if (this.collides(my.sprite.player, car)) {
+                car.visible = false;
+                car.y = -100;
+                setTimeout(() => { this.respawn(); }, 1000);
             }
+
+            if (car.x < -car.displayWidth) {
+                car.visible = false;
+                car.y = -100;
+                setTimeout(() => { this.respawn(); }, 1000);
+            }
+
+            //if (my.sprite.carFast.x < 
         }
 
         if (this.gameOver) {
@@ -93,7 +82,22 @@ class Level extends Phaser.Scene {
 
     spawnCar() {
         let yPos = Phaser.Math.Between(0, game.config.height);
-        return new Car(this, game.config.width + 100, yPos, "carFast", null, this.carSpeed);
+        let diceRoll = Math.random();
+        let texture = "carFast";
+        if (diceRoll < 0.75) {
+            texture = "carFast";
+        } else if (diceRoll >= 0.75) {
+            texture = "ambulance";
+        }
+        return new Car(this, game.config.width + 100, yPos, texture, null, this.carSpeed);
+    }
+
+    respawn() {
+        let my = this.my;
+
+        my.sprite.carFast.destroy();
+        my.sprite.carFast = this.spawnCar();
+        my.sprite.carFast.setScale(0.5);
     }
 
     collides(player, object) {
