@@ -3,6 +3,7 @@ class Car extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, texture, frame);
 
         this.speed = speed;
+        this.steeringSpeed = 10;
         this.x = x;
         this.y = y;
 
@@ -20,14 +21,14 @@ class Car extends Phaser.Physics.Arcade.Sprite {
             this.y = -100;
             setTimeout(() => {
                 this.visible = true;
-                this.setPosition()
+                this.setPosition();
             }, 1000);
         }
         if (this.distanceToPlayer(this.threat) <= 400) {
             if (this.y <= this.threat.y)
-                this.y -= 5;
+                this.y -= this.steeringSpeed;
             else
-                this.y += 5;
+                this.y += this.steeringSpeed;
         }
     }
 
