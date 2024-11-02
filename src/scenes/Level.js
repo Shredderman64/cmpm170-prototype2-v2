@@ -5,17 +5,11 @@ class Level extends Phaser.Scene {
         this.my = { sprite: {} };
         this.gameOver = false;
         this.carSpeed = 25;
-
-        // Timer for periodic trigger
-        this.periodicTimer = 0;
     }
 
     create() {
-
-        // adding racetrack background
+        // Adding racetrack background
         this.racetrack = this.add.tileSprite(0, 0, 1560, 1260, 'racetrack').setOrigin(0, 0);
-
-        // Scale the racetrack image to fit the game screen
         this.racetrack.setScale(1, 0.6);
 
         this.init_game();
@@ -30,8 +24,7 @@ class Level extends Phaser.Scene {
         this.controls.up = this.input.keyboard.addKey("W");
         this.controls.down = this.input.keyboard.addKey("S");
 
-        my.sprite.player = new Player(this, game.config.width / 6, game.config.height / 2,
-            "player", null, this.controls);
+        my.sprite.player = new Player(this, game.config.width / 6, game.config.height / 2, "player", null, this.controls);
         my.sprite.player.setScale(0.5);
         my.sprite.player.setCollideWorldBounds(true);
         my.sprite.player.body.setMaxVelocityX(700);
@@ -39,6 +32,9 @@ class Level extends Phaser.Scene {
 
         my.sprite.carFast = this.spawnCar();
         my.sprite.carFast.setScale(0.5);
+
+        // Load collision sound
+        this.explosionSound = this.sound.add("explosionSound");
     }
 
     update() {
@@ -49,10 +45,8 @@ class Level extends Phaser.Scene {
 
         function displayGameOver(scene) {
             my.sprite.player.makeInactive();
-            scene.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square",
-                "game over", 30).setOrigin(0.5);
-            scene.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
-                "press ENTER to return", 30).setOrigin(0.5);
+            scene.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square", "game over", 30).setOrigin(0.5);
+            scene.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square", "press ENTER to return", 30).setOrigin(0.5);
             scene.gameOver = true;
         }
 
@@ -60,6 +54,8 @@ class Level extends Phaser.Scene {
             car.update();
 
             if (this.collides(my.sprite.player, car)) {
+                this.createExplosion(car.x, car.y); // Trigger explosion effect
+                this.explosionSound.play();         // Play explosion sound
                 car.visible = false;
                 car.y = -100;
                 setTimeout(() => { this.respawn(); }, 1000);
@@ -70,8 +66,6 @@ class Level extends Phaser.Scene {
                 car.y = -100;
                 setTimeout(() => { this.respawn(); }, 1000);
             }
-
-            //if (my.sprite.carFast.x < 
         }
 
         if (this.gameOver) {
@@ -106,6 +100,17 @@ class Level extends Phaser.Scene {
         if (Math.abs(player.y - object.y) > (player.displayHeight / 2 + object.displayHeight / 2) * 0.7)
             return false;
         return true;
+    }
+
+    createExplosion(x, y) {
+        const emitter = this.add.particles(x, y, 'particle', {
+            lifespan: 400,
+            speed: { min: 180, max: 220 },
+            scale: { start: 2, end: 0 },
+            blendMode: 'ADD',
+            emitting: false
+        });
+        emitter.explode(16);
     }
 
     init_game() {

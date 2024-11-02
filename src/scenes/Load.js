@@ -16,6 +16,9 @@ class Load extends Phaser.Scene {
         this.load.image("throw", "throw.png");
         this.load.image("ambulance", "carAmbulence.png")
         this.load.image("racetrack", "racetrack.png");
+        this.load.image("particle", "star-particles.png");
+        this.load.audio("explosionSound", "explosion.wav");
+
 
         this.load.bitmapFont("pixel_square", "fonts/pixel_square_0.png", "fonts/pixel_square.fnt");
 
