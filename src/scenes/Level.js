@@ -5,6 +5,9 @@ class Level extends Phaser.Scene {
         this.my = { sprite: {} };
         this.gameOver = false;
         this.carSpeed = 25;
+
+        // store the points for the player
+        this.points = 0;
     }
 
     create() {
@@ -35,6 +38,43 @@ class Level extends Phaser.Scene {
 
         // Load collision sound
         this.explosionSound = this.sound.add("explosionSound");
+
+        // Display the points on the top right corner of the screen
+        this.pointsText = this.add.text(
+            game.config.width - borderUISize + borderPadding,
+            borderUISize - borderPadding,
+            "Points: 0", // Initial text
+            {
+            fontSize: '28px',
+            fill: '#fff',
+            fontStyle: 'bold'
+            }
+        ).setOrigin(1, 0);
+
+        // Initialize the timer immediately in create()
+        this.timer = 120000; // 2 minutes in milliseconds
+
+        // display timer text
+        this.timerText = this.add.text(
+            game.config.width / 2,
+            borderUISize,
+            "Time: 02:00", // Initial text (2 minutes)
+            {
+                fontSize: '28px',
+                fill: '#fff',
+                fontStyle: 'bold',
+            }
+        ).setOrigin(2.6, 0.6); // Set anchor point to center top
+
+        this.updateTimer(); // Call to initialize display
+
+        // this.updateTimer(); // Call once to initialize the display
+        this.timerEvent = this.time.addEvent({ // Use this.time directly
+            delay: 1000,
+            callback: this.updateTimer,
+            callbackScope: this,
+            loop: true,
+        });
     }
 
     update() {
@@ -59,6 +99,9 @@ class Level extends Phaser.Scene {
                 car.visible = false;
                 car.y = -100;
                 setTimeout(() => { this.respawn(); }, 1000);
+
+                this.points += 1; // increment points for player for each collision with car
+                this.timer += 20000; // Increase timer by 20 seconds on collision
             }
 
             if (car.x < -car.displayWidth) {
@@ -72,6 +115,9 @@ class Level extends Phaser.Scene {
             if (Phaser.Input.Keyboard.JustDown(this.return))
                 this.scene.start("titleScreen");
         }
+
+        // update the text for the points
+        this.pointsText.setText(`Points: ${this.points}`);
     }
 
     spawnCar() {
@@ -111,6 +157,25 @@ class Level extends Phaser.Scene {
             emitting: false
         });
         emitter.explode(16);
+    }
+
+    updateTimer() {
+        console.log("Timer before update:", this.timer); // Debugging
+        this.timer -= this.time.delta;
+    
+        if (this.timer <= 0 && !this.gameOver) {
+            this.timer = 0; // Stop at zero
+            this.gameOver = true;
+            this.displayGameOver(); // Call gameOver function
+            return; // Stop further processing of this function if game is over.
+        }
+    
+        let minutes = Math.floor(this.timer / 60000);
+        let seconds = Math.floor((this.timer % 60000) / 1000).toString().padStart(2, '0');
+        let formattedTime = `Time: ${minutes}:${seconds}`;
+
+        this.timerText.setText(formattedTime);
+        console.log("Timer after update:", this.timer); // Debuggingawda
     }
 
     init_game() {
