@@ -5,7 +5,7 @@ class Level extends Phaser.Scene {
         this.my = { sprite: {} };
         this.gameOver = false;
         this.carSpeed = 25;
-        this.timer = 20000;
+        this.timer = 10000;
 
         // store the points for the player
         this.points = 0;
@@ -134,7 +134,7 @@ class Level extends Phaser.Scene {
         } else if (diceRoll >= 0.75) {
             texture = "ambulance";
         }
-        return new Car(this, game.config.width + 100, yPos, texture, null, this.carSpeed);
+        return new Car(this, game.config.width + 1000, yPos, texture, null, this.carSpeed);
     }
 
     respawn() {
@@ -185,5 +185,6 @@ class Level extends Phaser.Scene {
     init_game() {
         this.gameOver = false;
         this.periodicTimer = 0;
+        this.timer = 10000;
     }
 }
