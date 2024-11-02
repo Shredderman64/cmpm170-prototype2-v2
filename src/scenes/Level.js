@@ -5,6 +5,7 @@ class Level extends Phaser.Scene {
         this.my = { sprite: {} };
         this.gameOver = false;
         this.carSpeed = 25;
+        this.timer = 20000;
 
         // store the points for the player
         this.points = 0;
@@ -37,7 +38,7 @@ class Level extends Phaser.Scene {
         my.sprite.carFast.setScale(0.5);
 
         // Load collision sound
-        this.explosionSound = this.sound.add("explosionSound");
+        this.explosionSound = this.sound.add("explosionSound", { "volume": 0.1 });
 
         // Display the points on the top right corner of the screen
         this.pointsText = this.add.text(
@@ -52,7 +53,6 @@ class Level extends Phaser.Scene {
         ).setOrigin(1, 0);
 
         // Initialize the timer immediately in create()
-        this.timer = 120000; // 2 minutes in milliseconds
 
         // display timer text
         this.timerText = this.add.text(
@@ -66,7 +66,7 @@ class Level extends Phaser.Scene {
             }
         ).setOrigin(2.6, 0.6); // Set anchor point to center top
 
-        this.updateTimer(); // Call to initialize display
+        //this.updateTimer(); // Call to initialize display
 
         // this.updateTimer(); // Call once to initialize the display
         this.timerEvent = this.time.addEvent({ // Use this.time directly
@@ -77,18 +77,11 @@ class Level extends Phaser.Scene {
         });
     }
 
-    update() {
+    update(time, delta) {
         let my = this.my;
         let car = my.sprite.carFast;
 
         my.sprite.player.update();
-
-        function displayGameOver(scene) {
-            my.sprite.player.makeInactive();
-            scene.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square", "game over", 30).setOrigin(0.5);
-            scene.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square", "press ENTER to return", 30).setOrigin(0.5);
-            scene.gameOver = true;
-        }
 
         if (!this.gameOver && my.sprite.carFast.visible) {
             car.update();
@@ -98,17 +91,20 @@ class Level extends Phaser.Scene {
                 this.explosionSound.play();         // Play explosion sound
                 car.visible = false;
                 car.y = -100;
-                setTimeout(() => { this.respawn(); }, 1000);
+                this.respawn();
 
                 this.points += 1; // increment points for player for each collision with car
-                this.timer += 20000; // Increase timer by 20 seconds on collision
+                this.timer += 3000; // Increase timer by 20 seconds on collision
             }
 
             if (car.x < -car.displayWidth) {
                 car.visible = false;
                 car.y = -100;
-                setTimeout(() => { this.respawn(); }, 1000);
+                this.respawn();
             }
+
+            console.log(delta);
+            this.timerUpdate(delta);
         }
 
         if (this.gameOver) {
@@ -118,6 +114,15 @@ class Level extends Phaser.Scene {
 
         // update the text for the points
         this.pointsText.setText(`Points: ${this.points}`);
+    }
+    
+    displayGameOver() {
+        let my = this.my;
+
+        my.sprite.player.makeInactive();
+        this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square", "game over", 30).setOrigin(0.5);
+        this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square", "press ENTER to return", 30).setOrigin(0.5);
+        this.gameOver = true;
     }
 
     spawnCar() {
@@ -159,23 +164,22 @@ class Level extends Phaser.Scene {
         emitter.explode(16);
     }
 
-    updateTimer() {
+    timerUpdate(delta) {
         console.log("Timer before update:", this.timer); // Debugging
-        this.timer -= this.time.delta;
+        this.timer -= delta;
     
         if (this.timer <= 0 && !this.gameOver) {
             this.timer = 0; // Stop at zero
             this.gameOver = true;
             this.displayGameOver(); // Call gameOver function
-            return; // Stop further processing of this function if game is over.
         }
     
         let minutes = Math.floor(this.timer / 60000);
-        let seconds = Math.floor((this.timer % 60000) / 1000).toString().padStart(2, '0');
+        let seconds = Math.floor((this.timer % 60000) / 1000).toString().padStart(2, "0");
         let formattedTime = `Time: ${minutes}:${seconds}`;
 
         this.timerText.setText(formattedTime);
-        console.log("Timer after update:", this.timer); // Debuggingawda
+        console.log("Timer after update:", this.timer); // Debugging
     }
 
     init_game() {
