@@ -5,7 +5,7 @@ class Level extends Phaser.Scene {
         this.my = { sprite: {} };
         this.gameOver = false;
         this.carSpeed = 25;
-        this.timer = 120000;
+        this.timer = 10000;
 
         // store the points for the player
         this.points = 0;
@@ -92,7 +92,7 @@ class Level extends Phaser.Scene {
                 this.respawn();
 
                 this.points += 1; // increment points for player for each collision with car
-                this.timer += 20000; // Increase timer by 20 seconds on collision
+                this.timer += 3000; // Increase timer by 20 seconds on collision
             }
 
             if (car.x < -car.displayWidth) {
