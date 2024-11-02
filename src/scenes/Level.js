@@ -120,8 +120,12 @@ class Level extends Phaser.Scene {
         let my = this.my;
 
         my.sprite.player.makeInactive();
-        this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square", "game over", 30).setOrigin(0.5);
-        this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square", "press ENTER to return", 30).setOrigin(0.5);
+        this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 80), "pixel_square",
+            "game over", 30).setOrigin(0.5);
+        this.add.bitmapText(game.config.width / 2, (game.config.height / 2 - 40), "pixel_square", 
+            `You scored ${this.points} cars`, 30).setOrigin(0.5);
+        this.add.bitmapText(game.config.width / 2, game.config.height / 2, "pixel_square",
+            "press ENTER to return", 30).setOrigin(0.5);
         this.gameOver = true;
     }
 
@@ -186,5 +190,6 @@ class Level extends Phaser.Scene {
         this.gameOver = false;
         this.periodicTimer = 0;
         this.timer = 10000;
+        this.points = 0;
     }
 }

@@ -3,7 +3,7 @@ class Car extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, texture, frame);
 
         this.speed = speed;
-        this.steeringSpeed = 10;
+        this.steeringSpeed = 8;
         this.x = x;
         this.y = y;
 
