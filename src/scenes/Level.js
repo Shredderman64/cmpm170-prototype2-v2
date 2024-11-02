@@ -5,7 +5,7 @@ class Level extends Phaser.Scene {
         this.my = { sprite: {} };
         this.gameOver = false;
         this.carSpeed = 25;
-        this.timer = 10000;
+        this.timer = 120000;
 
         // store the points for the player
         this.points = 0;
@@ -50,9 +50,7 @@ class Level extends Phaser.Scene {
             fill: '#fff',
             fontStyle: 'bold'
             }
-        ).setOrigin(1, 0);
-
-        // Initialize the timer immediately in create()
+        ).setOrigin(1, 0.1);
 
         // display timer text
         this.timerText = this.add.text(
@@ -64,7 +62,7 @@ class Level extends Phaser.Scene {
                 fill: '#fff',
                 fontStyle: 'bold',
             }
-        ).setOrigin(2.6, 0.6); // Set anchor point to center top
+        ).setOrigin(3.2, 0.6); // Set anchor point to center top
 
         //this.updateTimer(); // Call to initialize display
 
@@ -94,7 +92,7 @@ class Level extends Phaser.Scene {
                 this.respawn();
 
                 this.points += 1; // increment points for player for each collision with car
-                this.timer += 3000; // Increase timer by 20 seconds on collision
+                this.timer += 20000; // Increase timer by 20 seconds on collision
             }
 
             if (car.x < -car.displayWidth) {
@@ -169,7 +167,6 @@ class Level extends Phaser.Scene {
     }
 
     timerUpdate(delta) {
-        console.log("Timer before update:", this.timer); // Debugging
         this.timer -= delta;
     
         if (this.timer <= 0 && !this.gameOver) {
@@ -183,7 +180,6 @@ class Level extends Phaser.Scene {
         let formattedTime = `Time: ${minutes}:${seconds}`;
 
         this.timerText.setText(formattedTime);
-        console.log("Timer after update:", this.timer); // Debugging
     }
 
     init_game() {
